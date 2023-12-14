@@ -1,7 +1,9 @@
 
 using BepInEx;
+using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
+using SevernQoL.Patches;
 
 namespace SevernQoL
 {
@@ -13,8 +15,9 @@ namespace SevernQoL
         private const string GUID = "io.github.severnarch.LCMods." + NAME;
 
         private readonly Harmony harmony = new Harmony(GUID);
+        private static ManualLogSource logSource;
+        public static ConfigFile config;
         private SevernQoLBase instance;
-        private ManualLogSource logSource;
 
         private void Awake()
         {
@@ -25,8 +28,14 @@ namespace SevernQoL
             logSource = BepInEx.Logging.Logger.CreateLogSource(NAME);
             logSource.LogMessage($"Preparing {NAME} v{VERSION}...");
 
+            config = Config;
+            Configuration.Load();
+
             logSource.LogDebug($"Patching all {NAME} patches...");
+
             harmony.PatchAll(typeof(SevernQoLBase));
+            harmony.PatchAll(typeof(HUDManagerPatch));
+
             logSource.LogDebug($"Patched all {NAME} patches!");
 
             logSource.LogMessage($"Prepared {NAME}!");

@@ -52,7 +52,6 @@ namespace [ModName]
 """
 csProjContent = """
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>[DotNetFramework]</TargetFramework>
     <AssemblyName>[ModName]</AssemblyName>
@@ -61,19 +60,23 @@ csProjContent = """
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
     <PackageReference Include="BepInEx.Core" Version="5.*" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="1.*" />
     <PackageReference Include="UnityEngine.Modules" Version="[UnityVersion]" IncludeAssets="compile" />
   </ItemGroup>
-  
   <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
   </ItemGroup>
 </Project>
 
+"""
+readmeContent = """
+# [ModName]
+> [ModDescription]
+
+A Lethal Company mod.
 """
 
 def fillPlaceholders(content:str, **kwargs):
@@ -94,3 +97,7 @@ with open(csProjLocation,"w") as cpl:
     cpl.write(fillPlaceholders(csProjContent, 
         ModName=ModName, ModVersion=ModVersion, ModDescription=ModDescription,
         DotNetFramework=DotNetFramework, UnityVersion=UnityVersion))
+with open("%s/README.md"%(ModName),"w") as rmd:
+    print("Writing README.md file...")
+    rmd.write(fillPlaceholders(readmeContent,
+        ModName=ModName, ModVersion=ModVersion, ModDescription=ModDescription))

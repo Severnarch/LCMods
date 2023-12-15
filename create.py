@@ -3,9 +3,17 @@ import subprocess, threading, os
 UnityVersion = "2022.3.9"
 DotNetFramework = "netstandard2.1"
 
-ModName:str        = input("Mod Name            -> ")
-ModDescription:str = input("Mod Description     -> ")
-ModVersion:str     = input("Mod Version (x.x.x) -> ")
+def parseStringToBool(string:str) -> bool:
+    string = string.lower().strip()
+    return [string == "y" or string == "yes" or string == "true" or string == "t"]
+
+ModName:str         = input("Mod Name            -> ")
+ModDescription:str  = input("Mod Description     -> ")
+ModVersion:str      = input("Mod Version (x.x.x) -> ")
+AddConfigs:bool     = parseStringToBool(
+                      input("Use Configurations  ->"))
+AddAssetBundle:bool = parseStringToBool(
+                      input("Use Asset Bundles   ->"))
 
 if len(ModName) == 0: ModName = "UnnamedMod"
 if len(ModVersion) == 0 or len(ModVersion.split(".")) != 3: ModVersion = "1.0.0"
@@ -73,6 +81,25 @@ namespace [ModName]
     }
 }
 """
+assetsScript = """
+using UnityEngine;
+
+namespace [ModName]
+{
+    internal class Assets
+    {
+        public static string MainAssetBundleName = "[ModName]";
+        public static AssetBundle MainAssetBundle;
+
+        public static void PopulateAssets()
+        {
+            [ModName]Base.logSource.LogDebug("Loading [ModName]'s asset bundle...");
+            MainAssetBundle = AssetBundle.LoadFromFile(MainAssetBundleName);
+            [ModName]Base.logSource.LogDebug("[ModName]'s asset bundle loaded!");
+        }
+    }
+}
+"""
 csProjContent = """
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
@@ -124,7 +151,14 @@ with open("%s/README.md"%(ModName),"w") as rmd:
     print("Writing README.md file...")
     rmd.write(fillPlaceholders(readmeContent,
         ModName=ModName, ModVersion=ModVersion, ModDescription=ModDescription))
-with open("%s/Configuration.cs"%(ModName),"w") as ccs:
-    print("Writing Configuration.cs file...")
-    ccs.write(fillPlaceholders(configurationScript,
+
+if AddConfigs: 
+    with open("%s/Configuration.cs"%(ModName),"w") as ccs:
+        print("Writing Configuration.cs file...")
+        ccs.write(fillPlaceholders(configurationScript,
+        ModName=ModName, ModVersion=ModVersion, ModDescription=ModDescription))
+if AddAssetBundle: 
+    with open("%s/Assets.cs"%(ModName),"w") as acs:
+        print("Writing Assets.cs file...")
+        acs.write(fillPlaceholders(assetsScript,
         ModName=ModName, ModVersion=ModVersion, ModDescription=ModDescription))

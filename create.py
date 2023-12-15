@@ -16,6 +16,7 @@ subprocess.run(command.split(" "))
 
 basePluginScript = """
 using BepInEx;
+using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
 
@@ -29,8 +30,9 @@ namespace [ModName]
         private const string GUID = "io.github.severnarch.LCMods." + NAME;
 
         private readonly Harmony harmony = new Harmony(GUID);
-        private [ModName]Base instance;
-        private ManualLogSource logSource;
+        private static ManualLogSource logSource;
+        public static ConfigFile config;
+        public static [ModName]Base instance;
 
         private void Awake()
         {
@@ -41,11 +43,32 @@ namespace [ModName]
             logSource = BepInEx.Logging.Logger.CreateLogSource(NAME);
             logSource.LogMessage($"Preparing {NAME} v{VERSION}...");
 
+            config = Config;
+            Configuration.Load()
+
             logSource.LogDebug($"Patching all {NAME} patches...");
+
             harmony.PatchAll(typeof([ModName]Base));
+
             logSource.LogDebug($"Patched all {NAME} patches!");
 
             logSource.LogMessage($"Prepared {NAME}!");
+        }
+    }
+}
+"""
+configurationScript = """
+using BepInEx.Configuration;
+
+namespace [ModName]
+{
+    internal class Configuration
+    {
+        // public static ConfigEntry<TYPE> NAME;
+
+        public static void Load()
+        {
+            // NAME = [ModName].config.Bind<bool>("CATEGORY", "NAME", DEFAULT, "DESCRIPTION");
         }
     }
 }
@@ -100,4 +123,8 @@ with open(csProjLocation,"w") as cpl:
 with open("%s/README.md"%(ModName),"w") as rmd:
     print("Writing README.md file...")
     rmd.write(fillPlaceholders(readmeContent,
+        ModName=ModName, ModVersion=ModVersion, ModDescription=ModDescription))
+with open("%s/Configuration.cs"%(ModName),"w") as ccs:
+    print("Writing Configuration.cs file...")
+    ccs.write(fillPlaceholders(readmeContent,
         ModName=ModName, ModVersion=ModVersion, ModDescription=ModDescription))

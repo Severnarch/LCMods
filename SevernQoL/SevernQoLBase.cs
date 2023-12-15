@@ -1,4 +1,3 @@
-
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
@@ -17,7 +16,7 @@ namespace SevernQoL
         private readonly Harmony harmony = new Harmony(GUID);
         private static ManualLogSource logSource;
         public static ConfigFile config;
-        private SevernQoLBase instance;
+        public static SevernQoLBase instance;
 
         private void Awake()
         {

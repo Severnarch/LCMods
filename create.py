@@ -126,5 +126,5 @@ with open("%s/README.md"%(ModName),"w") as rmd:
         ModName=ModName, ModVersion=ModVersion, ModDescription=ModDescription))
 with open("%s/Configuration.cs"%(ModName),"w") as ccs:
     print("Writing Configuration.cs file...")
-    ccs.write(fillPlaceholders(readmeContent,
+    ccs.write(fillPlaceholders(configurationScript,
         ModName=ModName, ModVersion=ModVersion, ModDescription=ModDescription))

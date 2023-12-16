@@ -50,10 +50,7 @@ namespace [ModName]
             }
             logSource = BepInEx.Logging.Logger.CreateLogSource(NAME);
             logSource.LogMessage($"Preparing {NAME} v{VERSION}...");
-
-            config = Config;
-            Configuration.Load()
-
+[ConfigLines]
             logSource.LogDebug($"Patching all {NAME} patches...");
 
             harmony.PatchAll(typeof([ModName]Base));
@@ -122,6 +119,12 @@ csProjContent = """
 </Project>
 
 """
+configLines = """
+
+            config = Config;
+            Configuration.Load();
+
+""" if AddConfigs else ""
 readmeContent = """
 # [ModName]
 > [ModDescription]
@@ -141,7 +144,8 @@ os.rename(templatePluginLocation, templatePluginLocation.replace("Plugin.cs","%s
 with open("%s/%sBase.cs"%(ModName,ModName),"w") as pcs:
 	print("Modifying %sBase.cs content..."%(ModName))
 	pcs.write(fillPlaceholders(basePluginScript, 
-        ModName=ModName, ModVersion=ModVersion, ModDescription=ModDescription))
+        ModName=ModName, ModVersion=ModVersion, ModDescription=ModDescription,
+        ConfigLines=configLines))
 with open(csProjLocation,"w") as cpl:
     print("Modifying %s.csproj content..."%(ModName))
     cpl.write(fillPlaceholders(csProjContent, 

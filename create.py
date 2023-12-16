@@ -5,7 +5,7 @@ DotNetFramework = "netstandard2.1"
 
 def parseStringToBool(string:str) -> bool:
     string = string.lower().strip()
-    return [string == "y" or string == "yes" or string == "true" or string == "t"]
+    return string == "y" or string == "yes" or string == "true" or string == "t"
 
 ModName:str         = input("Mod Name            -> ")
 ModDescription:str  = input("Mod Description     -> ")

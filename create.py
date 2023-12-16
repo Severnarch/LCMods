@@ -38,8 +38,7 @@ namespace [ModName]
         private const string GUID = "io.github.severnarch.LCMods." + NAME;
 
         private readonly Harmony harmony = new Harmony(GUID);
-        public static ManualLogSource logSource;
-        public static ConfigFile config;
+        public static ManualLogSource logSource;%s
         public static [ModName]Base instance;
 
         private void Awake()
@@ -61,7 +60,8 @@ namespace [ModName]
         }
     }
 }
-"""
+"""%("""
+        public static ConfigFile config;""" if AddConfigs else "")
 configurationScript = """
 using BepInEx.Configuration;
 

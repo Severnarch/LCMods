@@ -23,8 +23,7 @@ print("Creating mod template with name %s"%(ModName))
 subprocess.run(command.split(" "))
 
 basePluginScript = """
-using BepInEx;
-using BepInEx.Configuration;
+using BepInEx;%s
 using BepInEx.Logging;
 using HarmonyLib;
 
@@ -61,7 +60,9 @@ namespace [ModName]
     }
 }
 """%("""
+using BepInEx.Configuration;""" if AddConfigs else "","""
         public static ConfigFile config;""" if AddConfigs else "")
+
 configurationScript = """
 using BepInEx.Configuration;
 
@@ -78,6 +79,7 @@ namespace [ModName]
     }
 }
 """
+
 assetsScript = """
 using UnityEngine;
 
@@ -97,6 +99,7 @@ namespace [ModName]
     }
 }
 """
+
 csProjContent = """
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
@@ -125,6 +128,7 @@ configLines = """
             Configuration.Load();
 
 """ if AddConfigs else ""
+
 readmeContent = """
 # [ModName]
 > [ModDescription]

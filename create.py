@@ -38,7 +38,7 @@ namespace [ModName]
         private const string GUID = "io.github.severnarch.LCMods." + NAME;
 
         private readonly Harmony harmony = new Harmony(GUID);
-        private static ManualLogSource logSource;
+        public static ManualLogSource logSource;
         public static ConfigFile config;
         public static [ModName]Base instance;
 

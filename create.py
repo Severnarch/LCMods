@@ -11,9 +11,9 @@ ModName:str         = input("Mod Name            -> ")
 ModDescription:str  = input("Mod Description     -> ")
 ModVersion:str      = input("Mod Version (x.x.x) -> ")
 AddConfigs:bool     = parseStringToBool(
-                      input("Use Configurations  ->"))
+                      input("Use Configurations  -> "))
 AddAssetBundle:bool = parseStringToBool(
-                      input("Use Asset Bundles   ->"))
+                      input("Use Asset Bundles   -> "))
 
 if len(ModName) == 0: ModName = "UnnamedMod"
 if len(ModVersion) == 0 or len(ModVersion.split(".")) != 3: ModVersion = "1.0.0"
